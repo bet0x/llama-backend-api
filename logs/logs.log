@@ -1,0 +1,9 @@
+Created a chunk of size 1094, which is longer than the specified 1000
+chroma db path:  /tmp/
+initializing collection: users
+initializing collection: chat_history
+initializing collection: chat_messages
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 5720 is in use by another program. Either identify and stop that program, or start the server with a different port.

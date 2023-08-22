@@ -1,3 +1,4 @@
+import openai
 import os
 from pprint import pprint
 from app.vector_database import vector_db

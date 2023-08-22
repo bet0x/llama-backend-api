@@ -9,10 +9,14 @@ from app.services.token_service import generate_token, invalidate_token
 
 
 def login(request: LoginRequest):
+
+    print('Received login request:', request)
     email: str = request.email
     password: str = request.password
 
+    print("going to fetch user by email:", email)
     user: User = get_user_by_email(email)
+    print("user fetched:", user)
 
     if user is None or not bcrypt.checkpw(password.encode('utf-8'), user.password):
         error_resp = ErrorResponse(message="Invalid credentials", status=401)

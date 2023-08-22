@@ -8,12 +8,12 @@ from app.models.database_models import User
 from app.repository.__init__ import user_collection_name
 from app.utils.mongo_utils import extract_duplicate_key_value_from_exception
 
-mongodb = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
-user_collection = mongodb.get_collection(user_collection_name)
-
 
 def save_user(user: User):
     try:
+        mongodb=pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+        print("Mongodb client variable values are:", mongodb)
+        user_collection = mongodb.get_collection(user_collection_name)
         result = user_collection.insert_one(user.__dict__())
         return result.acknowledged, str(result.inserted_id), 201
     except Exception as e:
@@ -25,6 +25,8 @@ def save_user(user: User):
 
 def get_user_by_email(email: str):
     try:
+        mongodb=pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+        user_collection = mongodb.get_collection(user_collection_name)
         user = user_collection.find_one({"email": email})
 
         if user is None:
