@@ -48,6 +48,8 @@ def get_user_by_email(email: str):
 def get_user_by_id(user_id: str):
     try:
         _id = ObjectId(user_id)
+        mongodb = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+        user_collection = mongodb.get_collection(user_collection_name)
         user = user_collection.find_one({"_id": _id})
 
         if user is None:

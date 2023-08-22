@@ -7,18 +7,28 @@ from langchain import OpenAI
 from werkzeug.datastructures import MultiDict
 
 from app.models.database_models import ChatMessage
-from app.processing import pre_processing
-from app.processing import llama
+from app.processing import pre_processing, pre_tools
+from app.services import avatar_service
+
 from app.repository.chat_repository import get_chat_history_by_bot_id_and_user_id, get_session_chat_history, \
     get_chat_history_by_bot_id_and_user_id_timestamp, save_chat_message
 
 
 def chat(chat_message: ChatMessage):
-    # bot_id, user_id, message, _id, session_id, is_user_message, is_deleted, timestamp -> coming from FE
+    # bot_id, user_id, name, message, _id, session_id, is_user_message, is_deleted, timestamp -> coming from FE
     user_save_resp = save_chat_message(chat_message)
     print("user_save_resp", user_save_resp)
 
-    body_data = preprocess(chat_message)
+    avatar = avatar_service.get_bot_name_by_bot_id(chat_message.bot_id)
+    print("avatar name: ", avatar)
+
+    chat_hist = pre_processing.format_chat_history(chat_message.bot_id, chat_message.user_id)
+    print("chat_history: ", chat_hist)
+
+    profile_output = pre_tools.search_docs(chat_message.message, chat_history, chat_message.name, avatar)
+    print("profile_output: ", profile_output)
+
+    body_data = pre_processing.llama_prompt(avatar, chat_message.name, profile_output, chat_hist, chat_message.message)
     print("preprocess_output :", body_data)
     ip_address = "172.31.14.16"
     port = 3005  # Replace with the actual port number
@@ -31,7 +41,6 @@ def chat(chat_message: ChatMessage):
             )
 
     #response = get_response_from_openai(preprocess_output)
-    # response = llama.call_llama(nickname,avatar,user_query,chat_history,current_summary,profile_output):
     response_data = response.json()
     final_response = response_data["choices"][0]["text"]
     print(f"final response is {final_response}")
@@ -100,7 +109,8 @@ def get_context_from_history(bot_id, user_id):
 # function to pre-process data before sending to OpenAI and return a final prompt for OPENAI to generate response
 def preprocess(chat_message: ChatMessage):
     print("Preprocessing...", chat_message)
-    prompt = pre_processing.main(chat_message.message, chat_message.bot_id, chat_message.user_id, chat_message.name)
+    avatar = avatar_service.get_bot_name_by_bot_id(chat_message.bot_id)
+    prompt = pre_processing.query_to_llm(chat_message.message, chat_message.bot_id, chat_message.user_id, chat_message.name, avatar)
     return prompt
 
 

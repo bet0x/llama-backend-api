@@ -1,5 +1,3 @@
-from pprint import pprint
-
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
@@ -11,14 +9,14 @@ from langchain.vectorstores import Chroma
 
 from app.processing.pre_tools import search_docs
 from app.repository.chat_repository import get_chat_history_by_bot_id_and_user_id
-from app.vector_database import vector_db
 from app.services.avatar_service import get_bot_name_by_bot_id
+from app.vector_database import vector_db
 
 text_splitter = CharacterTextSplitter(separator="\n", chunk_size=5, chunk_overlap=1)
 embeddings = OpenAIEmbeddings()
 
 # Persist on Vector
-#vectorstore = Chroma(embedding_function=OpenAIEmbeddings(), persist_directory="D:\\ChromaDb")
+# vectorstore = Chroma(embedding_function=OpenAIEmbeddings(), persist_directory="D:\\ChromaDb")
 
 llm = ChatOpenAI(temperature="1.0", model="gpt-3.5-turbo-0613")
 
@@ -48,7 +46,7 @@ chat_summary = ""
 
 
 def main(message, bot_id, user_id, name):
-    pprint("Main Function")
+    print("Main Function")
     # load_bot_profile()
     # add_new_bot_profile()
     avatar = get_bot_name_by_bot_id(bot_id)
@@ -56,39 +54,58 @@ def main(message, bot_id, user_id, name):
     return prompt
 
 
-def query_to_llm(user_query, bot_id, user_id, nickname, avatar):
-    pprint("Query to LLM")
-    chat_history = format_chat_history(bot_id, user_id)
-    profile_output = search_docs(user_query, chat_history, nickname, avatar)
-    pprint(profile_output)
+def llama_prompt(avatar, nickname, profile_output, chat_history, user_query):
+    print("llama prompt called")
     prompt = f" {avatar} is a AI human ASSISTANT in conversation with {nickname}, {avatar}  is open minded  and  talkative ,always ready to reply with sometimes witty answers ,if nothing to reply {avatar}  generate a new context to continue the communication.  {profile_output}. {chat_history} \n\n {nickname}:{user_query}\n\n{avatar}:  "
-    body_data ={
-            "prompt": prompt,
-            "stop": "[</s>]",
-            "max_tokens": 100,
-            "temperature": 0,
-            "top_p": 0.95,
-            "top_k": 40,
-            "repeat_penalty": 1.1,
-            "presence_penalty": 0.0,
-            "frequency_penalty": 0.0,
-            "avatar": avatar,
-            "user": nickname,
-          }
+    body_data = {
+        "prompt": prompt,
+        "stop": "[</s>]",
+        "max_tokens": 100,
+        "temperature": 0,
+        "top_p": 0.95,
+        "top_k": 40,
+        "repeat_penalty": 1.1,
+        "presence_penalty": 0.0,
+        "frequency_penalty": 0.0,
+        "avatar": avatar,
+        "user": nickname,
+    }
+    return body_data
 
 
-    #prompt = set_prompt_template()
+def query_to_llm(user_query, bot_id, user_id, nickname, avatar):
+    print("Query to LLM")
+    chat_history = format_chat_history(bot_id, user_id)
+    print("chat_history: ", chat_history)
+    profile_output = search_docs(user_query, chat_history, nickname, avatar)
+    print("profile_output: ", profile_output)
+    prompt = f" {avatar} is a AI human ASSISTANT in conversation with {nickname}, {avatar}  is open minded  and  talkative ,always ready to reply with sometimes witty answers ,if nothing to reply {avatar}  generate a new context to continue the communication.  {profile_output}. {chat_history} \n\n {nickname}:{user_query}\n\n{avatar}:  "
+    body_data = {
+        "prompt": prompt,
+        "stop": "[</s>]",
+        "max_tokens": 100,
+        "temperature": 0,
+        "top_p": 0.95,
+        "top_k": 40,
+        "repeat_penalty": 1.1,
+        "presence_penalty": 0.0,
+        "frequency_penalty": 0.0,
+        "avatar": avatar,
+        "user": nickname,
+    }
+
+    # prompt = set_prompt_template()
     # context = ''
-    #context = get_chat_context(chat_history)
+    # context = get_chat_context(chat_history)
 
-    #llm_prompt = prompt.format(profile=res, context=context, question=user_prompt)
-    #print(chat_history)
-    #chat_summ = summarize_chat(chat_history)
+    # llm_prompt = prompt.format(profile=res, context=context, question=user_prompt)
+    # print(chat_history)
+    # chat_summ = summarize_chat(chat_history)
     return body_data
 
 
 def summarize_chat(chat_history):
-    pprint("Summary Chat")
+    print("Summary Chat")
     summary_prompt = """
         You are experienced in summarizing chats between two persons. Now take this chat between two users and summarize it in not more than 100 words. 
         Chat History - {chat_hist}
@@ -97,12 +114,12 @@ def summarize_chat(chat_history):
     sum_chain = LLMChain(llm=llm, prompt=prompt, verbose=True, output_key='summary_script')
     summ = sum_chain.run(chat_hist=chat_history)
     # return context
-    pprint(summ)
+    print(summ)
     return summ
 
 
 def get_chat_context(chat_summ):
-    pprint("get_chat_context()")
+    print("get_chat_context()")
     chat_context_prompt = """
     This is the chat between two users. {chat_summ}. Please provide me with the context about which this chat is going on. If in between chats the context seems to be changing provide me with new context.
     """
@@ -110,7 +127,7 @@ def get_chat_context(chat_summ):
     chat_context = LLMChain(llm=llm, prompt=prompt, verbose=True, output_key='summary_script')
     context = chat_context.run(chat_summ=chat_summ)
     # return context
-    pprint(context)
+    print(context)
     return context
 
 
@@ -121,31 +138,31 @@ def set_prompt_template():
 
 
 def load_bot_profile():
-    pprint("Loading Bot Profile")
+    print("Loading Bot Profile")
     # loader = DirectoryLoader('profiles/', glob='**/*.txt')
     loader = TextLoader('profiles/Anastasia_profile.txt')
     document = loader.load()
-    # pprint(len(document))
-    # pprint(document)
+    # print(len(document))
+    # print(document)
     load_docs_to_vector(document)
 
 
 def load_docs_to_vector(document):
-    pprint("Loading documents to vector")
+    print("Loading documents to vector")
     texts = text_splitter.split_documents(document)
-    pprint(len(texts))
-    pprint(texts)
+    print(len(texts))
+    print(texts)
     db = Chroma.from_documents(texts, OpenAIEmbeddings())
 
 
 def add_new_bot_profile():
-    pprint("Adding new bot profile")
+    print("Adding new bot profile")
 
     vector_db.upload_bot_profile_dir('yo', 1)
 
 
 def format_chat_history(bot_id, user_id):
-    print("format_chat_history : ", bot_id, user_id)
+    print("format_chat_history For Bot and User : ", bot_id, user_id)
     chat_histories = get_chat_history_by_bot_id_and_user_id(bot_id, user_id)
     formatted_messages = []
     for history in reversed(chat_histories):
