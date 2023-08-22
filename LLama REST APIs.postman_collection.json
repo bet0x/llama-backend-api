@@ -1,0 +1,596 @@
+{
+	"info": {
+		"_postman_id": "77ef8b9a-0a93-4df4-a663-da0857edba6d",
+		"name": "LLama REST APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21964736"
+	},
+	"item": [
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "Chat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bot_id\":\"this_is_bot_id\",\r\n    \"user_id\": \"this_is_user_id\",\r\n    \"session_id\": \"this_is_session_id\",\r\n    \"query_type\": \"message\",\r\n    \"message\": \"Do you think that you will have extra marital affairs\"    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "172.16.10.221:5001/chat",
+							"host": [
+								"172",
+								"16",
+								"10",
+								"221"
+							],
+							"port": "5001",
+							"path": [
+								"chat"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"bot_id\":\"this_is_bot_id\",\r\n    \"user_id\": \"this_is_user_id\",\r\n    \"session_id\": \"this_is_session_id\",\r\n    \"query_type\": \"message\",\r\n    \"message\": \"Do you think that you will have extra marital affairs\"    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "172.16.10.221:5001/chat",
+									"host": [
+										"172",
+										"16",
+										"10",
+										"221"
+									],
+									"port": "5001",
+									"path": [
+										"chat"
+									]
+								}
+							},
+							"status": "BAD REQUEST",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.6 Python/3.11.4"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Aug 2023 10:52:59 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"query_type cannot be empty\",\n    \"status\": 400\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Latest n Chat Messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "172.16.10.221:5001/chat/history?user_id=this_is_user_id&bot_id=this_is_bot_id",
+							"host": [
+								"172",
+								"16",
+								"10",
+								"221"
+							],
+							"port": "5001",
+							"path": [
+								"chat",
+								"history"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "this_is_user_id"
+								},
+								{
+									"key": "bot_id",
+									"value": "this_is_bot_id"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@foo.bar\",\n    \"password\": \"Password@1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "172.16.10.221:5001/auth/login",
+							"host": [
+								"172",
+								"16",
+								"10",
+								"221"
+							],
+							"port": "5001",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Invalid Credentials",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"john.doe@foo.bar\",\n    \"password\": \"Password@12341\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5001/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "UNAUTHORIZED",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.6 Python/3.10.12"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 10 Aug 2023 21:14:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "56"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid credentials\",\n    \"status\": 401\n}"
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"john.doe@foo.bar\",\n    \"password\": \"Password@1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5001/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.6 Python/3.10.12"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 10 Aug 2023 21:15:05 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "100"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"auth_token\": \"15c9e21a-91c1-4646-9ac3-8507b66d6012\",\n    \"user_id\": \"64d5527baaa2ca07b73d9c4e\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@foo.bar\",\n    \"password\": \"Password@1234\",\n    \"confirm_password\": \"Password@1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5001/auth/register",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Already registered",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@foo.bar\",\n    \"password\": \"Password@1234\",\n    \"confirm_password\": \"Password@1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5001/auth/register",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "CONFLICT",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.6 Python/3.10.12"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 10 Aug 2023 20:36:49 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"email 'john.doe@foo.bar' already registered\"\n}"
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@foo.bar\",\n    \"password\": \"Password@1234\",\n    \"confirm_password\": \"Password@1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5001/auth/register",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "CREATED",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.6 Python/3.10.12"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 10 Aug 2023 21:15:16 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "106"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registered successfully\",\n    \"status\": 201,\n    \"user_id\": \"64d55364d2b7853a4b89aa82\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": \"64d604181f4a0cf014d157c1\",\r\n    \"auth_token\": \"1ae069f6-88b5-4ec0-9469-31feae27a9b0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5001/auth/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\": \"64d604181f4a0cf014d157c1\",\r\n    \"auth_token\": \"1ae069f6-88b5-4ec0-9469-31feae27a9b0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5001/auth/logout",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.6 Python/3.11.4"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 11 Aug 2023 10:15:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "60"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out successfully\",\n    \"status\": 200\n}"
+						},
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\": \"64d604181f4a0cf014d157c1\",\r\n    \"auth_token\": \"1ae069f6-88b5-4ec0-9469-31feae27a9b0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5001/auth/logout",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "UNAUTHORIZED",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.3.6 Python/3.11.4"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 11 Aug 2023 10:16:08 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "50"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logout failed\",\n    \"status\": 401\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5001/ping",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5001/user/profile?user_id=64d604181f4a0cf014d157c1",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"user",
+						"profile"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "64d604181f4a0cf014d157c1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

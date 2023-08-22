@@ -1,0 +1,122 @@
+from pprint import pprint
+import requests
+import json
+
+from flask import jsonify
+from langchain import OpenAI
+from werkzeug.datastructures import MultiDict
+
+from app.models.database_models import ChatMessage
+from app.processing import pre_processing
+from app.processing import llama
+from app.repository.chat_repository import get_chat_history_by_bot_id_and_user_id, get_session_chat_history, \
+    get_chat_history_by_bot_id_and_user_id_timestamp, save_chat_message
+
+
+def chat(chat_message: ChatMessage):
+    # bot_id, user_id, message, _id, session_id, is_user_message, is_deleted, timestamp -> coming from FE
+    user_save_resp = save_chat_message(chat_message)
+    print("user_save_resp", user_save_resp)
+
+    body_data = preprocess(chat_message)
+    print("preprocess_output :", body_data)
+    ip_address = "172.31.14.16"
+    port = 3005  # Replace with the actual port number
+
+    api_url = f"http://{ip_address}:{port}/v1/completions"
+    response = requests.post(
+             url = api_url,
+             json=body_data,
+             headers={"content-type": "application/json"}
+            )
+
+    #response = get_response_from_openai(preprocess_output)
+    # response = llama.call_llama(nickname,avatar,user_query,chat_history,current_summary,profile_output):
+    response_data = response.json()
+    final_response = response_data["choices"][0]["text"]
+    print(f"final response is {final_response}")
+
+    ai_chat_msg = ChatMessage(bot_id=chat_message.bot_id, user_id=chat_message.user_id, message=final_response,
+                              is_user_message=False, session_id=chat_message.session_id,
+                              query_type=chat_message.query_type)
+    ai_save_resp = save_chat_message(ai_chat_msg)
+    print("ai_save_resp", ai_save_resp)
+    pprint(f"chat message --> {chat_message}")
+    post_process(final_response)  # make it background process
+    return jsonify({
+        "user_id": chat_message.user_id,
+        "bot_id": chat_message.bot_id,
+        "resp_type": chat_message.query_type,
+        "resp_msg": final_response,
+        "resp_url": "hardcoded_url"
+    })
+
+
+def upload_image():
+    return
+
+
+# function to get chat history by bot_id and user_id to display in chat history page
+def chat_history(args: MultiDict[str, str]):
+    print("chat_history", args)
+    bot_id = args.get("bot_id", None)
+    user_id = args.get("user_id", None)
+    limit = int(args.get("limit", 10))
+    timestamp = int(args.get("timestamp", 0))
+    offset = int(args.get("offset", 0))
+    mode = args.get("mode", "before")
+
+    if timestamp > 0:
+        return chat_history_with_timestamp(bot_id, user_id, limit, mode, timestamp)
+    else:
+        history = get_chat_history_by_bot_id_and_user_id(bot_id, user_id, limit, offset)
+        return jsonify(history)
+
+
+def chat_history_with_timestamp(bot_id: str, user_id: str, limit: int = 10, mode: str = "before", timestamp: int = 0):
+    history = get_chat_history_by_bot_id_and_user_id_timestamp(bot_id, user_id, limit, timestamp, mode)
+    return jsonify(history)
+
+
+def chat_session_history(bot_id: str, user_id: str, session_id: str):
+    history = get_session_chat_history(bot_id, user_id, session_id)
+    return jsonify(history)
+
+
+def delete_chat(bot_id: str, user_id: str):
+    print("delete_chat:", bot_id, user_id)
+
+
+def download():
+    return
+
+
+# function to get context from history message based on last session id
+def get_context_from_history(bot_id, user_id):
+    print("get_context_from_history", bot_id, user_id)
+    return None
+
+
+# function to pre-process data before sending to OpenAI and return a final prompt for OPENAI to generate response
+def preprocess(chat_message: ChatMessage):
+    print("Preprocessing...", chat_message)
+    prompt = pre_processing.main(chat_message.message, chat_message.bot_id, chat_message.user_id, chat_message.name)
+    return prompt
+
+
+def post_process(response):
+    print("Postprocessing...", response)
+    return response
+
+
+def get_response_from_openai(preprocess_output):
+    # if type(preprocess_output) is ChatMessage:
+    try:
+        llm = OpenAI(temperature="1.0")
+        print("making openai call: ", preprocess_output)
+        openai_response = llm(preprocess_output)
+        print("OpenAI response: ", str(openai_response))
+        return openai_response
+    except Exception as e:
+        print("OpenAI error: ", str(e))
+        return "Sorry, I don't understand. Can you please rephrase?"
