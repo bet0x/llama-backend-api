@@ -23,7 +23,7 @@ def login(request: LoginRequest):
         return jsonify(error_resp.__dict__), error_resp.status
 
     auth_token = generate_token(user)
-    resp = LoginResponse(user_id=user.user_id.__str__(), auth_token=auth_token)
+    resp = LoginResponse(user_id=user.user_id.__str__(), auth_token=auth_token, name=user.name.__str__())
     return jsonify(resp.__dict__), 200
 
 

@@ -1,7 +1,8 @@
 class LoginResponse:
-    def __init__(self, auth_token: str, user_id: str):
+    def __init__(self, auth_token: str, user_id: str, name: str):
         self.auth_token: str = auth_token
         self.user_id: str = user_id
+        self.name: str = name
 
 
 class SignupResponse:
