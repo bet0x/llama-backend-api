@@ -7,7 +7,7 @@ from langchain import OpenAI
 from werkzeug.datastructures import MultiDict
 
 from app.models.database_models import ChatMessage
-from app.processing import pre_processing, pre_tools
+from app.processing import pre_processing, pre_tools, post_processing
 from app.services import avatar_service
 
 from app.repository.chat_repository import get_chat_history_by_bot_id_and_user_id, get_session_chat_history, \
@@ -51,7 +51,7 @@ def chat(chat_message: ChatMessage):
     ai_save_resp = save_chat_message(ai_chat_msg)
     print("ai_save_resp", ai_save_resp)
     pprint(f"chat message --> {chat_message}")
-    post_process(final_response)  # make it background process
+    post_processing.main(avatar, chat_message.message, final_response, profile_output)  # make it background process
     return jsonify({
         "user_id": chat_message.user_id,
         "bot_id": chat_message.bot_id,
