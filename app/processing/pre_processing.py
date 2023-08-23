@@ -79,7 +79,7 @@ def query_to_llm(user_query, bot_id, user_id, nickname, avatar):
     print("chat_history: ", chat_history)
     profile_output = search_docs(user_query, chat_history, nickname, avatar)
     print("profile_output: ", profile_output)
-    prompt = f" {avatar} is a AI human ASSISTANT in conversation with {nickname}, {avatar}  is open minded  and  talkative ,always ready to reply with sometimes witty answers ,if nothing to reply {avatar}  generate a new context to continue the communication.  {profile_output}. {chat_history} \n\n {nickname}:{user_query}\n\n{avatar}:  "
+    prompt = f" {avatar} is a AI human ASSISTANT in conversation with {nickname}, {avatar}  is open minded  and  talkative ,always ready to reply with sometimes witty answers ,if nothing to reply {avatar}  generate a new context to continue the communication.  {profile_output}. {chat_history} \n\n Human:{user_query}\n\nAssistant:  "
     body_data = {
         "prompt": prompt,
         "stop": "[</s>]",
@@ -167,7 +167,9 @@ def format_chat_history(bot_id, user_id):
     formatted_messages = []
     for history in reversed(chat_histories):
         # print(chat)
-        speaker = history['name']
         message = history['message']
-        formatted_messages.append(f"{speaker}: {message}")
+        if history['is_user_message']:
+            formatted_messages.append(f"Human: {message}")
+        else:
+            formatted_messages.append(f"Assistant: {message}")
     return formatted_messages
