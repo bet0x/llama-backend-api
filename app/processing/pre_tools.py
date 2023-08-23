@@ -28,13 +28,15 @@ def get_function_profile(nickname, avatar, user_query, chat_history, current_sum
     new_message = [{"role": "system",
                     "content": f"behave like a highly skilled system that  trained in language comprehension and understanding the contexts.  Two humans, named as  '{nickname}' and '{avatar}' are in a casual conversation.Rewrite latest statement by '{nickname}' replacing  all pronouns with appropriate nouns based on the given chat history between the two"},
                    {"role": "user",
-                    "content": f"the chat history  between the two is '{chat_history}\n\n {nickname}: {user_query}' , now returned only the last modified statement/question."}]
+                    "content": f"the chat history  between the two is '{chat_history}\n\n {nickname}: {user_query}' , now returned only the last modified statement/question."}]  
+    print("new_message: ", new_message)
     new_response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=new_message,
         temperature=0,
     )
     user_statement = new_response["choices"][0]["message"]["content"]
+    print("user_statement: ", user_statement)
     profile_data = profile.get_profile(nickname, avatar, user_statement, chat_history, current_summary, bot_id)
     return (profile_data)
 
