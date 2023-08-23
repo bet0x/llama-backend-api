@@ -40,22 +40,22 @@ def get_function_profile(nickname, avatar, user_query, chat_history, current_sum
 
 
 @register_function('get_function_video')
-def get_function_video(nickname, avatar, user_query, chat_history, current_summary):
+def get_function_video(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     return ("get_function_video")
 
 
 @register_function('get_function_any_other')
-def get_function_any_other(nickname, avatar, user_query, chat_history, current_summary):
+def get_function_any_other(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     return ("get_function_any_other")
 
 
 @register_function('get_function_no_question')
-def get_function_no_question(nickname, avatar, user_query, chat_history, current_summary):
+def get_function_no_question(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     return ("get_function_no_question")
 
 
 @register_function('get_function_nothing')
-def get_function_nothing(nickname, avatar, user_query, chat_history, current_summary):
+def get_function_nothing(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     return ("get_function_nothing")
 
 

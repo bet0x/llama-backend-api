@@ -56,7 +56,7 @@ def main(message, bot_id, user_id, name):
 
 def llama_prompt(avatar, nickname, profile_output, chat_history, user_query):
     print("llama prompt called")
-    prompt = f" {avatar} is a AI human ASSISTANT in conversation with {nickname}, {avatar}  is open minded  and  talkative ,always ready to reply with sometimes witty answers ,if nothing to reply {avatar}  generate a new context to continue the communication.  {profile_output}. {chat_history} \n\n {nickname}:{user_query}\n\n{avatar}:  "
+    prompt = f" {avatar} is a AI human ASSISTANT in conversation with {nickname}, {avatar}  is open minded  and  talkative ,always ready to reply with sometimes witty answers ,if nothing to reply {avatar}  generate a new context to continue the communication.  {profile_output}. {chat_history} \n\n Human:{user_query}\n\nAssistant:  "
     body_data = {
         "prompt": prompt,
         "stop": "[</s>]",
