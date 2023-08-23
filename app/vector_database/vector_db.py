@@ -67,8 +67,12 @@ def add_bot_profile(data, bot_id):
 
 def fetch_bot_profile(bot_id, query, count):
     print("fetch_bot_profile called")
-    docs = vectorstore.similarity_search(query, k=count, filter={"bot_id": bot_id})
-    return docs
+    #docs = vectorstore.similarity_search(query, k=count, filter={"bot_id": bot_id})
+    retriever = vectorstore.as_retriever(search_type="similarity_score_threshold", search_kwargs={'score_threshold': 0.5})
+    qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever, return_source_documents=True)
+    result = qa({"query": query, "filter": {"bot_id": bot_id}})
+    #return docs
+    return result['result']
 
 
 def add_user_profile(data, user_id):

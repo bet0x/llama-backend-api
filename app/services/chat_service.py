@@ -51,13 +51,14 @@ def chat(chat_message: ChatMessage):
     ai_save_resp = save_chat_message(ai_chat_msg)
     print("ai_save_resp", ai_save_resp)
     pprint(f"chat message --> {chat_message}")
-    post_processing.main(avatar, chat_message.message, final_response, profile_output)  # make it background process
+   # post_processing.main(avatar, chat_message.message, final_response, profile_output)  # make it background process
     return jsonify({
         "user_id": chat_message.user_id,
         "bot_id": chat_message.bot_id,
         "resp_type": chat_message.query_type,
         "resp_msg": final_response,
-        "resp_url": "hardcoded_url"
+        "resp_url": "hardcoded_url",
+        "timestamp": ai_chat_msg.timestamp
     })
 
 

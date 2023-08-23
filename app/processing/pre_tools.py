@@ -60,15 +60,15 @@ def get_function_nothing(nickname, avatar, user_query, chat_history, current_sum
     return ("get_function_nothing")
 
 
-def search_docs(ques, chat_history, nickname, avatar):
-    function_name = agent.get_function(nickname, avatar, ques, chat_history, "")
-    profile_output = ""
+def search_docs(ques, chat_history, nickname, avatar, bot_id):
+    function_name = agent.get_function(nickname,avatar,ques,chat_history,"")
+    profile_output=""
     if function_name in function_registry:
         # Get the function from the registry
         selected_function = function_registry[function_name]
         current_summary = ""
         # Call the selected function
-        profile_output = selected_function(nickname, avatar, ques, chat_history, current_summary)
-        print(f" is {profile_output}")
+           profile_output = selected_function(nickname,avatar,ques,chat_history,current_summary, bot_id)
+           print(f" is {profile_output}")
 
     return profile_output
