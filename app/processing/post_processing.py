@@ -14,7 +14,7 @@ from langchain.prompts import (
 )
 from langchain.chat_models import ChatOpenAI
 
-chat = ChatOpenAI(model="text-ada-001", temperature=0)
+chat = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 
 def post_process_bot_response(avatar, user_input, reply_from_llm, profile_output):
