@@ -42,8 +42,8 @@ def upload_bot_profile(file, bot_id):
 def upload_bot_profile_dir(dir, bot_id):
     print("upload_bot_profile called")
     # loading data
-    loader = DirectoryLoader('J:\\Python\\llama-backend\\profiles\\life', glob="*.txt")
-    pprint(loader)
+    loader = TextLoader('/data/vikas/Profile/life/Profile.txt')
+    print(loader)
     raw_documents = loader.load()
     documents = text_splitter.split_documents(raw_documents)
     documents_with_header = []

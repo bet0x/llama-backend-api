@@ -25,7 +25,7 @@ def chat(chat_message: ChatMessage):
     chat_hist = pre_processing.format_chat_history(chat_message.bot_id, chat_message.user_id)
     print("chat_history: ", chat_hist)
 
-    profile_output = pre_tools.search_docs(chat_message.message, chat_history, chat_message.name, avatar)
+    profile_output = pre_tools.search_docs(chat_message.message, chat_history, chat_message.name, avatar, chat_message.bot_id)
     print("profile_output: ", profile_output)
 
     body_data = pre_processing.llama_prompt(avatar, chat_message.name, profile_output, chat_hist, chat_message.message)
