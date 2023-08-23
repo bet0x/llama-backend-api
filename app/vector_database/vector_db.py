@@ -3,6 +3,8 @@ from datetime import datetime
 from pprint import pprint
 
 from dotenv import load_dotenv
+from langchain import OpenAI
+from langchain.chains import RetrievalQA
 from langchain.document_loaders import TextLoader, DirectoryLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
@@ -40,7 +42,7 @@ def upload_bot_profile(file, bot_id):
 def upload_bot_profile_dir(dir, bot_id):
     print("upload_bot_profile called")
     # loading data
-    loader = DirectoryLoader('C:\\Users\\Akhil\\PycharmProjects\\llama-backend-api\\profiles\\life', glob="*.txt")
+    loader = DirectoryLoader('J:\\Python\\llama-backend\\profiles\\life', glob="*.txt")
     pprint(loader)
     raw_documents = loader.load()
     documents = text_splitter.split_documents(raw_documents)

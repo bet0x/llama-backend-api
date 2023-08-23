@@ -32,30 +32,30 @@ app.register_error_handler(400, bad_request)
 app.register_error_handler(404, not_found)
 app.register_error_handler(500, internal_server_error)
 
-# vector_db.upload_bot_profile_dir("", 101)
+vector_db.upload_bot_profile_dir("", 97832)
 # qdarnt = profile.load_profiles()
 
 embeddings = OpenAIEmbeddings()
 
 
-def load_sentences_from_files():
-    loader = TextLoader("/data/vikas/Profile/life/Profile.txt")
-    documents = loader.load()
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    docs = text_splitter.split_documents(documents)
-    return docs
-
-
-docs = load_sentences_from_files()
-
-qdrant = Qdrant.from_documents(
-    docs,
-    embeddings,
-    path="/tmp/docs",
-    collection_name="Profile",
-)
-
-load_sentences_from_files()
+# def load_sentences_from_files():
+#     loader = TextLoader("/data/vikas/Profile/life/Profile.txt")
+#     documents = loader.load()
+#     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+#     docs = text_splitter.split_documents(documents)
+#     return docs
+#
+#
+# docs = load_sentences_from_files()
+#
+# qdrant = Qdrant.from_documents(
+#     docs,
+#     embeddings,
+#     path="/tmp/docs",
+#     collection_name="Profile",
+# )
+#
+# load_sentences_from_files()
 
 
 @app.route("/ping", methods=["GET"])

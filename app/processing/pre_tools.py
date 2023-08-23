@@ -1,7 +1,6 @@
 import openai
 from langchain.chat_models import ChatOpenAI
 
-from app import qdrant as qd
 from app.processing import agent
 from app.processing import profile
 
@@ -24,7 +23,7 @@ def get_function_photo(nickname, avatar, user_query, chat_history, current_summa
 
 
 @register_function('get_function_profile')
-def get_function_profile(nickname, avatar, user_query, chat_history, current_summary):
+def get_function_profile(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     ## First try to get the actual question##
     new_message = [{"role": "system",
                     "content": f"behave like a highly skilled system that  trained in language comprehension and understanding the contexts.  Two humans, named as  '{nickname}' and '{avatar}' are in a casual conversation.Rewrite latest statement by '{nickname}' replacing  all pronouns with appropriate nouns based on the given chat history between the two"},
@@ -36,7 +35,7 @@ def get_function_profile(nickname, avatar, user_query, chat_history, current_sum
         temperature=0,
     )
     user_statement = new_response["choices"][0]["message"]["content"]
-    profile_data = profile.get_profile(nickname, avatar, user_statement, chat_history, current_summary, qd)
+    profile_data = profile.get_profile(nickname, avatar, user_statement, chat_history, current_summary, bot_id)
     return (profile_data)
 
 
@@ -61,14 +60,13 @@ def get_function_nothing(nickname, avatar, user_query, chat_history, current_sum
 
 
 def search_docs(ques, chat_history, nickname, avatar, bot_id):
-    function_name = agent.get_function(nickname,avatar,ques,chat_history,"")
-    profile_output=""
+    function_name = agent.get_function(nickname, avatar, ques, chat_history, "")
+    profile_output = ""
     if function_name in function_registry:
         # Get the function from the registry
         selected_function = function_registry[function_name]
         current_summary = ""
         # Call the selected function
-           profile_output = selected_function(nickname,avatar,ques,chat_history,current_summary, bot_id)
-           print(f" is {profile_output}")
-
+        profile_output = selected_function(nickname, avatar, ques, chat_history, current_summary, bot_id)
+        print(f" is {profile_output}")
     return profile_output
