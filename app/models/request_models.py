@@ -14,7 +14,7 @@ class LoginRequest:
         return True, "Validation successful"
 
     def __str__(self):
-        return "Email: " + self.email + ", Password: " + str(self.password)
+        return "Email: " + self.email
 
 
 class SignupRequest:
@@ -24,7 +24,7 @@ class SignupRequest:
         self.email: str = email
 
     def __str__(self):
-        return "Name: " + self.name + ", Email: " + self.email + ", Password: " + str(self.password)
+        return "Name: " + self.name + ", Email: " + self.email
 
     def validate(self):
         if not self.name or self.name == "":
