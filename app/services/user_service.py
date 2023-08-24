@@ -3,6 +3,10 @@ from flask import jsonify
 from app.models.database_models import User
 from app.models.response_models import ErrorResponse
 from app.repository.user_repository import get_user_by_id
+from app.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 def get_user_profile(user_id: str):
@@ -12,6 +16,7 @@ def get_user_profile(user_id: str):
 
     user: User = get_user_by_id(user_id)
     print("user is: ", user)
+    logger.info(f"user is:: {user}")
 
     if user is None:
         error_resp = ErrorResponse(message='User not found with id: ' + user_id, status=404)

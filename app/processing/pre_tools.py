@@ -5,6 +5,10 @@ from langchain.chat_models import ChatOpenAI
 
 from app.processing import agent
 from app.processing import profile
+from app.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 llm = ChatOpenAI(temperature="1.0", model="gpt-3.5-turbo-0613")
 function_registry = {}
@@ -33,6 +37,7 @@ def get_function_profile(nickname, avatar, user_query, chat_history, current_sum
                    {"role": "user",
                     "content": f"the chat history  between the two is '{new_chat_history}\n\n {nickname}: {user_query}' , now returned only the last modified statement/question."}]
     print("new_message: ", new_message)
+    logger.info(f"new_message: {new_message}")
     new_response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=new_message,
@@ -40,34 +45,37 @@ def get_function_profile(nickname, avatar, user_query, chat_history, current_sum
     )
     user_statement = new_response["choices"][0]["message"]["content"]
     print("user_statement: ", user_statement)
+    logger.info(f"user_statement: {user_statement}")
     profile_data = profile.get_profile(nickname, avatar, user_statement, chat_history, current_summary, bot_id)
     return profile_data
 
 
 @register_function('get_function_video')
 def get_function_video(nickname, avatar, user_query, chat_history, current_summary, bot_id):
-    return ("get_function_video")
+    return "get_function_video"
 
 
 @register_function('get_function_any_other')
 def get_function_any_other(nickname, avatar, user_query, chat_history, current_summary, bot_id):
-    return ("get_function_any_other")
+    return "get_function_any_other"
 
 
 @register_function('get_function_no_question')
 def get_function_no_question(nickname, avatar, user_query, chat_history, current_summary, bot_id):
-    return ("get_function_no_question")
+    return "get_function_no_question"
 
 
 @register_function('get_function_nothing')
 def get_function_nothing(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     print("get_function_nothing")
-    return ("")
+    logger.info(f"get_function_nothing:")
+    return ""
 
 
 @register_function('get_function_nothing')
 def get_function_greeting(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     print("get_function_greeting")
+    logger.info(f"get_function_greeting:")
     return "This is a greeting"
 
 
@@ -81,11 +89,13 @@ def search_docs(ques, chat_history, nickname, avatar, bot_id):
         # Call the selected function
         profile_output = selected_function(nickname, avatar, ques, chat_history, current_summary, bot_id)
         print(f" is {profile_output}")
+        logger.info(f" is {profile_output}")
     return profile_output
 
 
 def add_name_in_chat_hist(chat_history, nickname, avatar):
     print("Add Name in Chat History: ", chat_history)
+    logger.info(f" Add Name in Chat History:  {chat_history}")
     new_chat_history = []
     for entry in chat_history:
         new_entry = re.sub(r"Human:", f"{nickname}:", entry)

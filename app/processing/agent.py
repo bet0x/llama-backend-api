@@ -1,10 +1,14 @@
 import json
 
 import openai
+from app.logger import get_logger
 
+
+logger = get_logger(__name__)
 
 # base_model: Optional[BaseModel] = None
 # base_model_schema = base_model.schema()
+
 
 def get_function_photo(question):
     what_to_do = {
@@ -157,9 +161,11 @@ def get_function(nickname, avatar, user_query, chat_history, current_summary):
     )
     response_message = response["choices"][0]["message"]
     # print (response_message)
+    logger.info(f"response_message: {response_message}")
 
     if response_message.get("function_call"):
         print(response_message["function_call"]["name"])
+        logger.info(f"response_message functionCall name: {response_message['function_call']['name']}")
         function_args = json.loads(response_message["function_call"]["arguments"])
         question = function_args.get("question"),
 

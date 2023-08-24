@@ -2,14 +2,18 @@ import re
 
 from langchain import OpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
-
 from app.vector_database import vector_db
+from app.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 embeddings = OpenAIEmbeddings()
 
 
 def get_profile(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     print(f"query is {user_query}")
+    logger.info(f"query is {user_query}")
     query = result = re.sub(r'^.*?:', '', user_query, count=1)
     # found_docs = qdrant.similarity_search(query)
     llm = OpenAI()
@@ -27,4 +31,4 @@ def get_profile(nickname, avatar, user_query, chat_history, current_summary, bot
     # result = qa({"query": query})
     # print(result['result'])
     result = vector_db.fetch_bot_profile(bot_id, query, 5)
-    return (result)
+    return result

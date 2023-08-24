@@ -2,6 +2,10 @@ from flask import Blueprint, request
 
 from app.middlewares.profile_request_middlewares import profile_requests_middleware
 from app.services import user_service
+from app.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 user_routes = Blueprint('user_routes', __name__)
 

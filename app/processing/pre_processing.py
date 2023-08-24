@@ -11,6 +11,10 @@ from app.processing.pre_tools import search_docs
 from app.repository.chat_repository import get_chat_history_by_bot_id_and_user_id
 from app.services.avatar_service import get_bot_name_by_bot_id
 from app.vector_database import vector_db
+from app.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 text_splitter = CharacterTextSplitter(separator="\n", chunk_size=5, chunk_overlap=1)
 embeddings = OpenAIEmbeddings()
@@ -56,6 +60,7 @@ def main(message, bot_id, user_id, name):
 
 def llama_prompt(avatar, nickname, profile_output, chat_history, user_query):
     print("llama prompt called")
+    logger.info(f"llama prompt called")
     prompt = f" {avatar} is a AI human ASSISTANT in conversation with {nickname}, {avatar}  is open minded  and  talkative ,always ready to reply with sometimes witty answers ,if nothing to reply {avatar}  generate a new context to continue the communication. This is the output from the assistant profile - {profile_output}. This is the recent chat history between the two {chat_history} \n\n Human:{user_query}\n\nAssistant:  "
     body_data = {
         "prompt": prompt,
@@ -163,6 +168,7 @@ def add_new_bot_profile():
 
 def format_chat_history(bot_id, user_id):
     print("format_chat_history For Bot and User : ", bot_id, user_id)
+    logger.info(f"format_chat_history For Bot and User : {bot_id}, {user_id}")
     chat_histories = get_chat_history_by_bot_id_and_user_id(bot_id, user_id)
     formatted_messages = []
     for history in reversed(chat_histories):
