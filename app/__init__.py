@@ -1,10 +1,7 @@
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
-from langchain.document_loaders import TextLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import Qdrant
 
 from app.handlers.cors_handler import cors_handler
 from app.handlers.error_handlers import not_found, internal_server_error, bad_request
