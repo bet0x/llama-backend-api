@@ -1,14 +1,7 @@
 import re
 
 from langchain import OpenAI
-from langchain import OpenAI
-from langchain.chains import RetrievalQA
-from langchain.chains import RetrievalQA
-from langchain.document_loaders import TextLoader
-from langchain.document_loaders import TextLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import Qdrant
 
 from app.vector_database import vector_db
 

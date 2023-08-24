@@ -41,7 +41,7 @@ def get_function_profile(nickname, avatar, user_query, chat_history, current_sum
     user_statement = new_response["choices"][0]["message"]["content"]
     print("user_statement: ", user_statement)
     profile_data = profile.get_profile(nickname, avatar, user_statement, chat_history, current_summary, bot_id)
-    return (profile_data)
+    return profile_data
 
 
 @register_function('get_function_video')
@@ -63,6 +63,12 @@ def get_function_no_question(nickname, avatar, user_query, chat_history, current
 def get_function_nothing(nickname, avatar, user_query, chat_history, current_summary, bot_id):
     print("get_function_nothing")
     return ("")
+
+
+@register_function('get_function_nothing')
+def get_function_greeting(nickname, avatar, user_query, chat_history, current_summary, bot_id):
+    print("get_function_greeting")
+    return "This is a greeting"
 
 
 def search_docs(ques, chat_history, nickname, avatar, bot_id):
