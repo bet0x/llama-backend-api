@@ -8,6 +8,7 @@ from langchain.vectorstores import Qdrant
 
 from app.handlers.cors_handler import cors_handler
 from app.handlers.error_handlers import not_found, internal_server_error, bad_request
+from app.logger import __init__ as init_logger
 from app.processing import profile
 from app.repository import __init__ as db_init
 from app.routes.auth_routes import auth_routes
@@ -17,6 +18,7 @@ from app.routes.user_routes import user_routes
 from app.vector_database import vector_db
 
 load_dotenv()
+init_logger()
 app = Flask(__name__)
 CORS(app)
 db_init()

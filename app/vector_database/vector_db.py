@@ -35,7 +35,7 @@ def upload_bot_profile(file, bot_id):
         doc.metadata.__setitem__("bot_id", bot_id)
         doc.metadata.pop("source")
         documents_with_header.append(doc)
-        print(doc)
+        #print(doc)
     vectorstore.add_documents(documents_with_header)
 
 
@@ -51,7 +51,7 @@ def upload_bot_profile_dir(dir, bot_id):
         doc.metadata.__setitem__("bot_id", bot_id)
         doc.metadata.pop("source")
         documents_with_header.append(doc)
-        print(doc)
+        #print(doc)
     vectorstore.add_documents(documents_with_header)
 
 
