@@ -6,7 +6,7 @@ from werkzeug.datastructures import MultiDict
 from app.models.database_models import ChatMessage
 from app.processing import pre_processing, pre_tools
 from app.repository.chat_repository import get_chat_history_by_bot_id_and_user_id, get_session_chat_history, \
-    get_chat_history_by_bot_id_and_user_id_timestamp, save_chat_message
+    get_chat_history_by_bot_id_and_user_id_timestamp, save_chat_message , delete_chat_history
 from app.services import avatar_service
 
 from app.logger import get_logger
@@ -37,8 +37,8 @@ def chat(chat_message: ChatMessage):
     body_data = pre_processing.llama_prompt(avatar, chat_message.name, profile_output, chat_hist, chat_message.message)
     print("preprocess_output :", body_data)
     logger.info(f"preprocess_output: {body_data}")
-    ip_address = "172.31.14.16"
-    port = 3005  # Replace with the actual port number
+    ip_address = "127.0.0.1"
+    port = 8000  # Replace with the actual port number
 
     api_url = f"http://{ip_address}:{port}/v1/completions"
     response = requests.post(
@@ -107,8 +107,17 @@ def chat_session_history(bot_id: str, user_id: str, session_id: str):
 
 
 def delete_chat(bot_id: str, user_id: str):
-    print("delete_chat:", bot_id, user_id)
     logger.info(f"delete_chat: {bot_id}, {user_id}")
+    result = delete_chat_history(bot_id, user_id)
+    if result == True:
+        return jsonify({
+            "message": "chats have been deleted"
+        })
+    else:
+        return jsonify({
+            "message": "something went wrong"
+        }), 500    
+
 
 
 def download():
@@ -117,7 +126,6 @@ def download():
 
 # function to get context from history message based on last session id
 def get_context_from_history(bot_id, user_id):
-    print("get_context_from_history", bot_id, user_id)
     logger.info(f"get_context_from_history: {bot_id}, {user_id}")
     return None
 
@@ -133,7 +141,6 @@ def preprocess(chat_message: ChatMessage):
 
 
 def post_process(response):
-    print("Postprocessing...", response)
     logger.info(f"Postprocessing: {response}")
     return response
 

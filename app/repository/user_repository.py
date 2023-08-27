@@ -11,7 +11,7 @@ from app.utils.mongo_utils import extract_duplicate_key_value_from_exception
 
 def save_user(user: User):
     try:
-        mongodb=pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+        mongodb=pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_docker")
         print("Mongodb client variable values are:", mongodb)
         user_collection = mongodb.get_collection(user_collection_name)
         result = user_collection.insert_one(user.__dict__())
@@ -25,7 +25,7 @@ def save_user(user: User):
 
 def get_user_by_email(email: str):
     try:
-        mongodb=pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+        mongodb=pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_docker")
         user_collection = mongodb.get_collection(user_collection_name)
         user = user_collection.find_one({"email": email})
 
@@ -48,7 +48,7 @@ def get_user_by_email(email: str):
 def get_user_by_id(user_id: str):
     try:
         _id = ObjectId(user_id)
-        mongodb = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+        mongodb = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_docker")
         user_collection = mongodb.get_collection(user_collection_name)
         user = user_collection.find_one({"_id": _id})
 

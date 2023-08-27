@@ -31,8 +31,9 @@ def session_history():
 
 @chat_routes.route('/chat', methods=['DELETE'])
 def delete_chat():
-    request.args.get("bot_id", None)
-    return chat_service.delete_chat("None", "None")
+    bot_id = request.args.get("bot_id", None)
+    user_id = request.args.get("user_id", None)
+    return chat_service.delete_chat(bot_id, user_id)
 
 
 @chat_routes.route('/upload-image', methods=['POST'])

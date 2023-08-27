@@ -3,13 +3,15 @@ import os
 import pymongo
 from pymongo.cursor import Cursor
 from pymongo.results import InsertOneResult
-
+from app.logger import get_logger
 from app.models.database_models import ChatMessage
 from app.repository.__init__ import chat_history_collection_name, chat_message_collection_name
 
-mongodb = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+mongodb = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_docker")
 chat_history_collection = mongodb.get_collection(chat_history_collection_name)
 chat_message_collection = mongodb.get_collection(chat_message_collection_name)
+
+logger = get_logger(__name__)
 
 
 def save_chat_message(chat_message: ChatMessage):
@@ -90,8 +92,10 @@ def get_session_chat_history(bot_id: str, user_id: str, session_id: str):
 def delete_chat_history(bot_id: str, user_id: str):
     try:
         chats_filter = {"bot_id": bot_id, "user_id": user_id}
-        chat_history_collection.update_many(filter=chats_filter, update={"$set": {"is_deleted": True}})
-        return True
+        result = chat_message_collection.update_many(filter=chats_filter, update={"$set": {"is_deleted": True}})
+        if result.modified_count > 0:
+            return True
+        return False
     except Exception as e:
         print(e)
         return False

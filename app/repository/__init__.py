@@ -8,7 +8,7 @@ chat_message_collection_name = "chat_messages"
 
 
 def __init__():
-    db = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_ai")
+    db = pymongo.MongoClient(os.environ.get("MONGO_URI")).get_database("llama_docker")
     existing_collections = db.list_collection_names()
     print("Existing collections:", existing_collections)
     init_users_collection(db, existing_collections)

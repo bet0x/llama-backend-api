@@ -13,6 +13,8 @@ def chat_request_middlewares():
 
 
 def _chat_request_middleware():
+    if request.method != "POST":
+        return
     _content_type_check()
     request_body = _get_request_body()
     req = ChatMessage(**request_body)

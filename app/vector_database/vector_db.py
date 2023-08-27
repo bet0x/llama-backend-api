@@ -22,7 +22,7 @@ vectorstore = Chroma(embedding_function=OpenAIEmbeddings(), persist_directory=ch
 
 # transformer pattern
 text_splitter = CharacterTextSplitter(
-    separator="\n",
+    separator="\n\n",
     chunk_size=7,
     chunk_overlap=2
 )
@@ -45,9 +45,10 @@ def upload_bot_profile_dir(dir, bot_id):
     print("upload_bot_profile called")
     logger.info(f"upload_bot_profile called")
     # loading data
-    loader = TextLoader('/data/vikas/Profile/life/Profile.txt')
+    loader = TextLoader('/home/prakash/Downloads/llama-backend/llama-backend-api/profiles/Profile.txt')
     raw_documents = loader.load()
     documents = text_splitter.split_documents(raw_documents)
+    print("Doc Length: ", len(documents))
     documents_with_header = []
     for doc in documents:
         doc.metadata.__setitem__("bot_id", bot_id)
