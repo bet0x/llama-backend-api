@@ -2,15 +2,17 @@ import requests
 from flask import jsonify
 from langchain import OpenAI
 from werkzeug.datastructures import MultiDict
-
+from dotenv import load_dotenv , find_dotenv
 from app.models.database_models import ChatMessage
 from app.processing import pre_processing, pre_tools
 from app.repository.chat_repository import get_chat_history_by_bot_id_and_user_id, get_session_chat_history, \
     get_chat_history_by_bot_id_and_user_id_timestamp, save_chat_message , delete_chat_history
 from app.services import avatar_service
-
+import os
+import base64
 from app.logger import get_logger
-
+load_dotenv(find_dotenv())
+ELEVEN_LABS_API_KEY= os.getenv("ELEVEN_LABS_API_KEY")
 
 logger = get_logger(__name__)
 
@@ -54,7 +56,9 @@ def chat(chat_message: ChatMessage):
     final_response = response_data["choices"][0]["text"]
     print(f"final response is {final_response}")
     logger.info(f"final response is {final_response}")
-
+    base64_audio = get_voice_message(final_response)
+    # print("base64 audio", base64_audio)
+    print(f"final response is {final_response}")
     ai_chat_msg = ChatMessage(bot_id=chat_message.bot_id, user_id=chat_message.user_id, message=final_response,
                               is_user_message=False, session_id=chat_message.session_id,
                               query_type=chat_message.query_type)
@@ -70,7 +74,8 @@ def chat(chat_message: ChatMessage):
         "resp_type": chat_message.query_type,
         "resp_msg": final_response,
         "resp_url": "hardcoded_url",
-        "timestamp": ai_chat_msg.timestamp
+        "timestamp": ai_chat_msg.timestamp,
+        "audio_base64": base64_audio
     })
 
 
@@ -159,3 +164,36 @@ def get_response_from_openai(preprocess_output):
         print("OpenAI error: ", str(e))
         logger.info(f"OpenAI error:: {str(e)}")
         return "Sorry, I don't understand. Can you please rephrase?"
+
+
+def get_voice_message(message):
+    payload = {
+        "text": message,
+        "model_id": "eleven_monolingual_v1",
+        "voice_settings": {
+            "stability": 0,
+            "similarity_boost": 0,
+            "style": 0,            
+            "similiarity_boost": 0
+        }
+    }
+
+
+    headers = {
+        "accept": 'audio/mpeg',
+        "xi-api-key": ELEVEN_LABS_API_KEY,
+        "Content-Type": 'application/json'
+    }
+
+    response = requests.post('https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM?optimize_streaming_latency=0' ,
+                            json=payload,
+                            headers=headers)
+    
+
+
+
+    if response.status_code == 200 and response.content:
+        base64_encoded_audio = base64.b64encode(response.content).decode('utf-8')
+        return base64_encoded_audio
+    else:
+        return None
