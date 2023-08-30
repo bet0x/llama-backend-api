@@ -39,8 +39,8 @@ def chat(chat_message: ChatMessage):
     body_data = pre_processing.llama_prompt(avatar, chat_message.name, profile_output, chat_hist, chat_message.message)
     print("preprocess_output :", body_data)
     logger.info(f"preprocess_output: {body_data}")
-    ip_address = "127.0.0.1"
-    port = 8000  # Replace with the actual port number
+    ip_address = "3.111.57.49"
+    port = 3005  # Replace with the actual port number
 
     api_url = f"http://{ip_address}:{port}/v1/completions"
     response = requests.post(
@@ -56,7 +56,7 @@ def chat(chat_message: ChatMessage):
     final_response = response_data["choices"][0]["text"]
     print(f"final response is {final_response}")
     logger.info(f"final response is {final_response}")
-    base64_audio = get_voice_message(final_response)
+    # base64_audio = get_voice_message(final_response)
     # print("base64 audio", base64_audio)
     print(f"final response is {final_response}")
     ai_chat_msg = ChatMessage(bot_id=chat_message.bot_id, user_id=chat_message.user_id, message=final_response,
@@ -68,15 +68,25 @@ def chat(chat_message: ChatMessage):
     print(f"chat ai_chat_msg --> {ai_chat_msg}")
     logger.info(f"ai_chat_msg: {ai_chat_msg}")
     # post_processing.main(avatar, chat_message.message, final_response, profile_output)  # make it background process
+    # below response is when we are sending the audio
+    # return jsonify({
+    #     "user_id": chat_message.user_id,
+    #     "bot_id": chat_message.bot_id,
+    #     "resp_type": chat_message.query_type,
+    #     "resp_msg": final_response,
+    #     "resp_url": "hardcoded_url",
+    #     "timestamp": ai_chat_msg.timestamp,
+    #     "audio_base64": base64_audio
+    # })
+    
     return jsonify({
         "user_id": chat_message.user_id,
         "bot_id": chat_message.bot_id,
         "resp_type": chat_message.query_type,
         "resp_msg": final_response,
         "resp_url": "hardcoded_url",
-        "timestamp": ai_chat_msg.timestamp,
-        "audio_base64": base64_audio
-    })
+        "timestamp": ai_chat_msg.timestamp
+    })    
 
 
 def upload_image():

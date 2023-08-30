@@ -1,7 +1,7 @@
 import json
 import requests
 
-ip_address = "172.31.14.16"
+ip_address = "3.111.57.49"
 port = 3005  # Replace with the actual port number
 
 api_url = f"http://{ip_address}:{port}/v1/completions"
