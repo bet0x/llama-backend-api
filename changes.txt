@@ -1,0 +1,12 @@
+1) change the pixie profile location in function upload_bot_profile_dir
+
+loader = TextLoader('/home/prakash/ml-projects/7-September/llama-backend-api/profiles/Pixie_profile.txt')
+raw_documents = loader.load()
+
+
+2) search for db name llama_ai in the entire project folder and change it to llama_docker , to change the name of the mongo db name
+
+3) change the llama backend ip and port inside chat_service.py to 
+
+ip_address = "3.111.57.49"
+port = 3005 
